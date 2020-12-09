@@ -6,4 +6,7 @@ public interface VisitorInterface           // visitor pattern
     String visit(GroupTotalVisitor groupTotalVisitor);
     String visit(MessagesTotalVisitor messagesTotalVisitor);
     String visit(PositivePercentageVisitor positivePercentageVisitor);
+    String visit(IDValidationVisitor idValidationVisitor);
+    String visit(LastUpdatedUserVisitor lastUpdatedUserVisitor);
+
 }

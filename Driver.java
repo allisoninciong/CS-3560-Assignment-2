@@ -15,6 +15,8 @@ public class Driver extends Application
     private TextField userIDTextArea, groupIDTextArea;
     private Button addUserButton, addGroupButton, openUserViewButton;
     private Button showUserTotalButton, showMessagesTotalButton, showGroupTotalButton, showPositivePercentageButton;
+    private Button validateIDsButton, findLastUpdatedUserButton;
+    private Label validateIDsLabel, findLastUpdatedUserLabel;
     private TreeItem<String> rootNode, parentNode;
     private Label showUserTotalLabel, showMessagesTotalLabel, showGroupTotalLabel, showPositivePercentageLabel;
     private String selectedNode;
@@ -58,12 +60,16 @@ public class Driver extends Application
         showMessagesTotalButton = new Button("Show Messages Total");
         showGroupTotalButton = new Button("Show Group Total");
         showPositivePercentageButton = new Button("Show Positive Percentage");
+        validateIDsButton = new Button("Validate IDs");
+        findLastUpdatedUserButton = new Button("Find Latest Updated User");
 
         // initialize labels
         showUserTotalLabel = new Label();
         showGroupTotalLabel = new Label();
         showMessagesTotalLabel = new Label();
         showPositivePercentageLabel = new Label();
+        validateIDsLabel = new Label();
+        findLastUpdatedUserLabel = new Label();
 
         // event listener for add user button
         addUserButton.setOnAction(event ->
@@ -120,6 +126,20 @@ public class Driver extends Application
             showPositivePercentageLabel.setText(controlPanel.getPositiveMessagePercentage());
         });
 
+        // event listener for validate id button
+        validateIDsButton.setOnAction(event ->
+        {
+            Popup.start("ID Validation", controlPanel.getIDValidation());
+            validateIDsLabel.setText(controlPanel.getIDValidation());
+        });
+
+        // event listener for find last updated user button
+        findLastUpdatedUserButton.setOnAction(event ->
+        {
+            Popup.start("Last Updated User", controlPanel.getLastUpdatedUser());
+            findLastUpdatedUserLabel.setText(controlPanel.getLastUpdatedUser());
+        });
+
         // format layout
         VBox vbox1 = new VBox(tree);
         HBox hbox1 = new HBox(10, userIDTextArea, addUserButton);
@@ -134,6 +154,10 @@ public class Driver extends Application
         pane1.add(showPositivePercentageButton, 1, 2);
         pane1.add(showMessagesTotalLabel, 0, 3);
         pane1.add(showPositivePercentageLabel, 1, 3);
+        pane1.add(validateIDsButton, 0, 4);
+        pane1.add(findLastUpdatedUserButton, 1, 4);
+        pane1.add(validateIDsLabel, 0, 5);
+        pane1.add(findLastUpdatedUserLabel, 1, 5);
         pane1.setVgap(10);
         pane1.setHgap(10);
 
@@ -141,7 +165,7 @@ public class Driver extends Application
         HBox hbox4 = new HBox(20, vbox1, vbox2);
 
         // create scene
-        Scene scene = new Scene(hbox4, 650, 300);
+        Scene scene = new Scene(hbox4, 650, 400);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Twitter Control Panel");
         primaryStage.show();

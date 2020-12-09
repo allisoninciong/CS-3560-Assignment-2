@@ -97,7 +97,7 @@ public class ControlPanel
 
     public User getUser(String ID)
     {
-        for (User user : userList)
+        for(User user : userList)
         {
             if(user.getID().equals(ID))
             {
@@ -145,5 +145,19 @@ public class ControlPanel
     {
         PositivePercentageVisitor positivePercentageVisitor = new PositivePercentageVisitor();
         return positivePercentageVisitor.accept(visitor);
+    }
+
+    // visitor pattern (ID validation)
+    public String getIDValidation()
+    {
+        IDValidationVisitor idValidationVisitor = new IDValidationVisitor();
+        return idValidationVisitor.accept(visitor);
+    }
+
+    // visitor pattern (ID validation)
+    public String getLastUpdatedUser()
+    {
+        LastUpdatedUserVisitor lastUpdatedUserVisitor = new LastUpdatedUserVisitor();
+        return lastUpdatedUserVisitor.accept(visitor);
     }
 }

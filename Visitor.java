@@ -1,13 +1,23 @@
 package v4;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class Visitor implements VisitorInterface        // visitor pattern
 {
     // declare variables
     private ControlPanel controlPanel;
     private String userList, groupList, positiveMessageList;
     private String userTotal, groupTotal, messageTotal, positiveMessagePercentage;
+    private String idValidation;
+    private String lastUpdatedUserID;
+    private String lastUpdatedUserString;
     private int positiveMessages;
+    private int max;
     private double percentage;
+    private String[] users, groups;
+    private ArrayList<Long> listOfLastUpdatedTimes;
+    private User lastUpdatedUser;
 
     public Visitor()
     {
@@ -18,15 +28,17 @@ public class Visitor implements VisitorInterface        // visitor pattern
         messageTotal = "";
         positiveMessagePercentage = "";
         positiveMessageList = "";
+        idValidation = "";
+        lastUpdatedUserID = "";
+        lastUpdatedUserString = "";
         positiveMessages = 0;
         percentage = 0;
+        max = 0;
+        listOfLastUpdatedTimes = new ArrayList<>();
     }
 
-    @Override
-    public String visit(UserTotalVisitor userTotalVisitor)
+    public String loadUsersIntoList()
     {
-        controlPanel = ControlPanel.getInstance();
-
         // reinitialize userList
         userList = "";
 
@@ -35,6 +47,30 @@ public class Visitor implements VisitorInterface        // visitor pattern
         {
             userList += "\n" + user.getID();
         }
+
+        return userList;
+    }
+
+    public String loadGroupsIntoList()
+    {
+        // reinitialize groupList
+        groupList = "";
+
+        // add each user group to a list
+        for(UserGroup userGroup : controlPanel.getUserGroupList())
+        {
+            groupList += "\n" + userGroup.getID();
+        }
+
+        return groupList;
+    }
+
+    @Override
+    public String visit(UserTotalVisitor userTotalVisitor)
+    {
+        controlPanel = ControlPanel.getInstance();
+
+        loadUsersIntoList();
 
         // string to display total users
         userTotal = "List of Users: " + userList;
@@ -46,14 +82,7 @@ public class Visitor implements VisitorInterface        // visitor pattern
     {
         controlPanel = ControlPanel.getInstance();
 
-        // reinitialize groupList
-        groupList = "";
-
-        // add each user group to a list
-        for(UserGroup userGroup : controlPanel.getUserGroupList())
-        {
-            groupList += "\n" + userGroup.getID();
-        }
+        loadGroupsIntoList();
 
         // string to display total user groups
         groupTotal = "List of User Groups: " + groupList;
@@ -97,5 +126,97 @@ public class Visitor implements VisitorInterface        // visitor pattern
         // string to display positive message percentage
         positiveMessagePercentage = "Positive Percentage: " + percentage + "%";
         return positiveMessagePercentage;
+    }
+
+    @Override
+    public String visit(IDValidationVisitor idValidationVisitor)
+    {
+        controlPanel = ControlPanel.getInstance();
+
+        // declare booleans
+        boolean containsDuplicate = false;
+        boolean containsSpace = false;
+
+        // load users and groups into list
+        loadUsersIntoList();
+        loadGroupsIntoList();
+
+        // put list elements into an array
+        users = userList.split("\\r?\\n");
+        groups = groupList.split("\\r?\\n");
+
+        // go through user list
+        for(int i = 0; i < users.length; i++)
+        {
+            // check for space
+            if(users[i].contains(" "))
+            {
+                containsSpace = true;
+            }
+
+            // check for duplicates
+            for(int j = i + 1; j < users.length; j++)
+            {
+                if(users[i].equals(users[j]))
+                {
+                    containsDuplicate = true;
+                }
+            }
+        }
+
+        // go through group list
+        for(int i = 0; i < groups.length; i++)
+        {
+            // check for space
+            if(groups[i].contains(" "))
+            {
+                containsSpace = true;
+            }
+
+            // check for duplicates
+            for(int j = i + 1; j < groups.length; j++)
+            {
+                if(groups[i].equals(groups[j]))
+                {
+                    containsDuplicate = true;
+                }
+            }
+        }
+
+        // if there are duplicates or if username contains space
+        if(containsDuplicate || containsSpace)
+        {
+            idValidation = "IDs are not valid";
+        }
+
+        // if there are no duplicates and no space characters
+        else
+        {
+            idValidation = "All IDs are valid";
+        }
+
+        return idValidation;
+    }
+
+    @Override
+    public String visit(LastUpdatedUserVisitor lastUpdatedUserVisitor)
+    {
+        controlPanel = ControlPanel.getInstance();
+
+        // add every user's last update time to array list
+        for(User user : controlPanel.getUserList())
+        {
+            // add times into array list
+            listOfLastUpdatedTimes.add(user.getLastUpdateTime());
+        }
+
+        // calculate who is the most recent user
+        max = listOfLastUpdatedTimes.indexOf(Collections.max(listOfLastUpdatedTimes));
+        lastUpdatedUser = controlPanel.getUserList().get(max);
+        lastUpdatedUserID = lastUpdatedUser.getID();
+
+        // string to display last updated user
+        lastUpdatedUserString = "Last Updated User: " + lastUpdatedUserID;
+        return lastUpdatedUserString;
     }
 }

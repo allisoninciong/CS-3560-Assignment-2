@@ -12,7 +12,8 @@ public class User extends Subject           // composite pattern (leaf)
     private List<String> newsFeed;
     private List<String> followingIDList;
     private List<String> followersIDList;
-
+    private long creationTime;
+    private long lastUpdateTime;
 
     public User(String ID)
     {
@@ -23,6 +24,8 @@ public class User extends Subject           // composite pattern (leaf)
         followingIDList = new ArrayList<String>();
         followersIDList = new ArrayList<String>();
 
+        // set creation time and ID
+        setCreationTime(System.currentTimeMillis());
         setID(ID);
     }
 
@@ -69,6 +72,26 @@ public class User extends Subject           // composite pattern (leaf)
             followersIDList.add(user.getID());
         }
         return followersIDList;
+    }
+
+    public void setCreationTime(long creationTime)
+    {
+        this.creationTime = creationTime;
+    }
+
+    public long getCreationTime()
+    {
+        return creationTime;
+    }
+
+    public void setLastUpdateTime(long lastUpdateTime)
+    {
+        this.lastUpdateTime = lastUpdateTime;
+    }
+
+    public long getLastUpdateTime()
+    {
+        return lastUpdateTime;
     }
 
     // visitor pattern

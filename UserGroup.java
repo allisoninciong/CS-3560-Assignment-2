@@ -7,6 +7,7 @@ public class UserGroup extends SysEntry             // composite pattern (compos
 {
     // declare variables
     private String ID;
+    private long creationTime;
 
     // composite pattern
     private List<SysEntry> userGroup;
@@ -17,6 +18,8 @@ public class UserGroup extends SysEntry             // composite pattern (compos
         ID = "";
         userGroup = new ArrayList<SysEntry>();
 
+        // set creation time and ID
+        setCreationTime(System.currentTimeMillis());
         setID(ID);
     }
 
@@ -34,6 +37,16 @@ public class UserGroup extends SysEntry             // composite pattern (compos
     {
         return ID;
     }
+
+    public void setCreationTime(long creationTime)
+    {
+        this.creationTime = creationTime;
+    }
+
+//    public long getCreationTime()
+//    {
+//        return creationTime;
+//    }
 
     // visitor pattern
     @Override
